@@ -23,7 +23,7 @@ jobs:
 
       - name: Replace branch with public snapshot
         run: |
-          rsync -a --delete --exclude='.git/' /tmp/snapshot/ ./
+          rsync -a --delete --exclude='.git/' --exclude='.github/workflows/' /tmp/snapshot/ ./
           git status --short
 
       - name: Commit imported snapshot
