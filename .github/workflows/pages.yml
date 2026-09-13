@@ -1,0 +1,74 @@
+name: Deploy GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    if: ${{ github.event.repository.visibility == 'public' }}
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_PAGES: "true"
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build static app
+        run: npm run build
+
+      - name: Prepare SPA for GitHub Pages
+        id: prepare
+        shell: bash
+        run: |
+          set -euo pipefail
+          shell_path="$(find . -type f -name _shell.html -print -quit)"
+          if [ -z "$shell_path" ]; then
+            echo "TanStack Start SPA shell (_shell.html) was not found after the build." >&2
+            exit 1
+          fi
+
+          publish_dir="$(dirname "$shell_path")"
+          cp "$shell_path" "$publish_dir/index.html"
+          cp "$shell_path" "$publish_dir/404.html"
+          touch "$publish_dir/.nojekyll"
+          echo "path=$publish_dir" >> "$GITHUB_OUTPUT"
+
+      - name: Upload GitHub Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: ${{ steps.prepare.outputs.path }}
+
+  deploy:
+    if: ${{ github.event.repository.visibility == 'public' }}
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
