@@ -1,0 +1,35 @@
+name: Import public snapshot
+
+on:
+  push:
+    branches: [import-public-release]
+
+permissions:
+  contents: write
+
+jobs:
+  import:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out import branch
+        uses: actions/checkout@v6
+
+      - name: Download clean snapshot
+        run: |
+          curl -L --fail --retry 3 'https://sdmntprnortheu.oaiusercontent.com/files/00000000-0498-81f4-9e7d-0e2dd31ab73d/raw?se=2026-09-13T07%3A52%3A10Z&sp=r&sv=2026-02-06&sr=b&scid=f81e6c04-2be1-54a6-aa01-e38937e48e48&skoid=7b771594-2b4f-4e93-93be-fdeeeb59aaf9&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-13T07%3A44%3A46Z&ske=2026-09-14T07%3A44%3A46Z&sks=b&skv=2026-02-06&sig=eSvJbUwCSW2E4FlxK21fhyDhc0RniThIyVGbFbHKYRs%3D' -o /tmp/public-snapshot-artifact.zip
+          mkdir -p /tmp/artifact /tmp/snapshot
+          unzip -q /tmp/public-snapshot-artifact.zip -d /tmp/artifact
+          unzip -q /tmp/artifact/public-snapshot.zip -d /tmp/snapshot
+
+      - name: Replace branch with public snapshot
+        run: |
+          rsync -a --delete --exclude='.git/' /tmp/snapshot/ ./
+          git status --short
+
+      - name: Commit imported snapshot
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -A
+          git commit -m 'Import clean public release snapshot'
+          git push origin HEAD:import-public-release
