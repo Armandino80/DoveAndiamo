@@ -1,0 +1,158 @@
+@import "tailwindcss" source(none);
+@source "../src";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+  --radius-3xl: calc(var(--radius) + 12px);
+  --radius-4xl: calc(var(--radius) + 16px);
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-olive: var(--olive);
+  --color-olive-foreground: var(--olive-foreground);
+  --color-gold: var(--gold);
+}
+
+:root {
+  --radius: 1rem;
+
+  /* Warm paper & ink — Italian travel magazine */
+  --background: oklch(0.962 0.016 88);
+  --foreground: oklch(0.27 0.03 55);
+  --card: oklch(0.985 0.01 90);
+  --card-foreground: oklch(0.27 0.03 55);
+  --popover: oklch(0.985 0.01 90);
+  --popover-foreground: oklch(0.27 0.03 55);
+
+  /* Terracotta primary, olive secondary, gold accents */
+  --primary: oklch(0.52 0.14 42);
+  --primary-foreground: oklch(0.97 0.012 88);
+  --secondary: oklch(0.92 0.028 90);
+  --secondary-foreground: oklch(0.32 0.04 55);
+  --muted: oklch(0.93 0.02 88);
+  --muted-foreground: oklch(0.5 0.03 60);
+  --accent: oklch(0.9 0.045 85);
+  --accent-foreground: oklch(0.32 0.05 50);
+  --olive: oklch(0.5 0.07 130);
+  --olive-foreground: oklch(0.97 0.01 90);
+  --gold: oklch(0.72 0.11 78);
+
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.985 0.01 90);
+  --border: oklch(0.88 0.025 82);
+  --input: oklch(0.88 0.025 82);
+  --ring: oklch(0.52 0.14 42);
+}
+
+@layer base {
+  * {
+    border-color: var(--color-border);
+  }
+
+  html {
+    background-color: var(--color-background);
+  }
+
+  body {
+    min-width: 320px;
+    background-color: var(--color-background);
+    color: var(--color-foreground);
+    font-family: "Karla", ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  .font-display {
+    font-family: "Cormorant", Georgia, serif;
+  }
+
+  a,
+  button {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  :where(a, button, [role="button"]):focus-visible {
+    outline: 3px solid var(--color-ring);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background: var(--color-accent);
+    color: var(--color-accent-foreground);
+  }
+}
+
+@layer components {
+  /* Random-city reveal */
+  @keyframes reveal-photo {
+    0% {
+      opacity: 0;
+      transform: scale(1.06);
+      filter: blur(6px);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes reveal-text {
+    0% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-reveal-photo {
+    animation: reveal-photo 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-reveal-text {
+    animation: reveal-text 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+
+  .animate-reveal-text-late {
+    animation: reveal-text 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.15s both;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
