@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">La Dolce Scoperta</title>
+  <desc id="desc">Een warme terracotta kompasroos op een crèmekleurige achtergrond.</desc>
+  <rect width="512" height="512" rx="112" fill="#f6f0e8"/>
+  <circle cx="256" cy="256" r="150" fill="#9f4b32"/>
+  <circle cx="256" cy="256" r="112" fill="none" stroke="#f6f0e8" stroke-width="8" opacity="0.95"/>
+  <path d="M256 134 288 224 378 256 288 288 256 378 224 288 134 256 224 224Z" fill="#f6f0e8"/>
+  <path d="M256 166 272 240 346 256 272 272 256 346 240 272 166 256 240 240Z" fill="#70804f"/>
+  <circle cx="256" cy="256" r="22" fill="#d5a84f"/>
+</svg>
